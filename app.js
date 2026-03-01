@@ -99,6 +99,7 @@ function toggleSidebar() {
 // ===== DASHBOARD =====
 let dashTrendChart = null;
 let dashPieChart = null;
+let dashBarChart = null;
 
 function updateDashboardKPIs() {
     const count = DB.getProductCount();
@@ -176,6 +177,39 @@ function renderDashboardCharts() {
             }
         }
     });
+
+    // Bar chart — top 8 SKUs by current stock level
+    const allProducts = DB.getProducts();
+    const topSkus = allProducts
+        .map(p => ({ name: p.name.length > 14 ? p.name.slice(0, 14) + '…' : p.name, qty: DB.getStock(p.sku) || 0, cat: p.category }))
+        .sort((a, b) => b.qty - a.qty).slice(0, 8);
+    const catColors2 = { Electronics: '#6366f1', Pharma: '#10b981', FMCG: '#f59e0b', Industrial: '#38bdf8', Apparel: '#ec4899' };
+
+    if (dashBarChart) dashBarChart.destroy();
+    const bCtx = document.getElementById('dash-bar-chart');
+    if (bCtx) {
+        dashBarChart = new Chart(bCtx.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: topSkus.map(s => s.name),
+                datasets: [{
+                    label: 'Stock Qty',
+                    data: topSkus.map(s => s.qty),
+                    backgroundColor: topSkus.map(s => (catColors2[s.cat] || '#8b5cf6') + 'cc'),
+                    borderColor: topSkus.map(s => catColors2[s.cat] || '#8b5cf6'),
+                    borderWidth: 1.5, borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+                plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(13,18,32,0.95)', titleColor: '#f1f5f9', bodyColor: '#94a3b8' } },
+                scales: {
+                    x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#475569', font: { size: 10 } } },
+                    y: { grid: { display: false }, ticks: { color: '#94a3b8', font: { size: 10 } } }
+                }
+            }
+        });
+    }
 }
 
 function renderActivityList() {

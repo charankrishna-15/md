@@ -131,7 +131,7 @@
         <p>Real-time overview of stock levels, movements, and alerts</p>
       </div>
       <div class="kpi-grid">
-        <div class="kpi-card" id="kpi-total-skus">
+        <div class="kpi-card kpi-accent-purple" id="kpi-total-skus">
           <div class="kpi-icon" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="2" y="7" width="20" height="14" rx="2" />
@@ -144,7 +144,7 @@
           </div>
           <div class="kpi-trend up">+2 this week</div>
         </div>
-        <div class="kpi-card" id="kpi-low-stock">
+        <div class="kpi-card kpi-accent-amber" id="kpi-low-stock">
           <div class="kpi-icon" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
@@ -158,7 +158,7 @@
           </div>
           <div class="kpi-trend down" id="kpi-low-trend">Critical</div>
         </div>
-        <div class="kpi-card" id="kpi-total-value">
+        <div class="kpi-card kpi-accent-green" id="kpi-total-value">
           <div class="kpi-icon" style="background:linear-gradient(135deg,#10b981,#059669)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="12" y1="1" x2="12" y2="23" />
@@ -171,7 +171,7 @@
           </div>
           <div class="kpi-trend up">+8.2% vs last month</div>
         </div>
-        <div class="kpi-card" id="kpi-anomalies">
+        <div class="kpi-card kpi-accent-pink" id="kpi-anomalies">
           <div class="kpi-icon" style="background:linear-gradient(135deg,#ec4899,#8b5cf6)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10" />
@@ -186,8 +186,10 @@
           <div class="kpi-trend down" id="kpi-anomaly-trend">Needs review</div>
         </div>
       </div>
-      <div class="charts-row">
-        <div class="chart-card wide">
+
+      <!-- 2×2 Charts Grid -->
+      <div class="charts-grid-2x2">
+        <div class="chart-card chart-accent-indigo">
           <div class="chart-header">
             <span class="chart-title">Stock Level Trends (7 Days)</span>
             <div class="chart-legend">
@@ -196,16 +198,20 @@
               <span class="leg-item"><span class="leg-dot" style="background:#f59e0b"></span>FMCG</span>
             </div>
           </div>
-          <canvas id="dash-trend-chart" height="110"></canvas>
+          <canvas id="dash-trend-chart" height="118"></canvas>
         </div>
-        <div class="chart-card">
+        <div class="chart-card chart-accent-emerald">
           <div class="chart-header"><span class="chart-title">Stock by Category</span></div>
-          <canvas id="dash-pie-chart" height="110"></canvas>
+          <canvas id="dash-pie-chart" height="118"></canvas>
         </div>
-      </div>
-      <div class="activity-section">
-        <div class="section-title">Recent Stock Movements</div>
-        <div class="activity-list" id="activity-list"></div>
+        <div class="chart-card chart-accent-amber">
+          <div class="chart-header"><span class="chart-title">Stock Level by SKU (Top 8)</span></div>
+          <canvas id="dash-bar-chart" height="118"></canvas>
+        </div>
+        <div class="chart-card chart-accent-pink">
+          <div class="chart-header"><span class="chart-title">Recent Stock Movements</span></div>
+          <div class="activity-list-mini" id="activity-list"></div>
+        </div>
       </div>
     </section>
 
@@ -453,11 +459,11 @@
           </div>
         </div>
         <div class="opt-right">
-          <div class="card">
+          <div class="card chart-accent-indigo">
             <div class="card-title">Demand Forecast (Next 12 Months)</div>
             <canvas id="forecast-chart" height="110"></canvas>
           </div>
-          <div class="card" style="margin-top:0.75rem">
+          <div class="card chart-accent-amber" style="margin-top:0.75rem">
             <div class="card-title">Total Cost Analysis</div>
             <canvas id="cost-chart" height="100"></canvas>
           </div>
@@ -495,7 +501,7 @@
           <div class="stat-summary" id="stat-summary"></div>
         </div>
         <div class="analyzer-main">
-          <div class="card">
+          <div class="card chart-accent-purple">
             <div class="chart-header">
               <span class="chart-title">Consumption + Moving Average + Anomaly Detection</span>
             </div>
@@ -522,7 +528,7 @@
           <div id="reorder-alerts-list"></div>
         </div>
         <div class="reports-panel">
-          <div class="card">
+          <div class="card chart-accent-blue">
             <div class="card-title">Reorder Status by Product</div>
             <canvas id="reorder-chart" height="120"></canvas>
           </div>
