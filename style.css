@@ -525,6 +525,16 @@ body {
   min-height: 280px;
 }
 
+/* 2x2 Module Chart Grid (no KPI row above — taller) */
+.module-grid-2x2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
+  height: calc(100vh - var(--topbar-h) - 80px);
+  min-height: 300px;
+}
+
 .chart-card {
   background: var(--bg-card);
   backdrop-filter: blur(12px);

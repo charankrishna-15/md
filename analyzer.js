@@ -147,10 +147,29 @@ const Analyzer = (() => {
         return anomalies.length;
     }
 
+    function renderAnalyzerStockLevels() {
+        const el = document.getElementById('analyzer-stock-levels');
+        if (!el) return;
+        const products = DB.getProducts();
+        const maxQty = Math.max(...products.map(p => DB.getStock(p.sku) || 0), 1);
+        const catColors = { Electronics: '#6366f1', Pharma: '#10b981', FMCG: '#f59e0b', Industrial: '#38bdf8', Apparel: '#ec4899' };
+        el.innerHTML = products.map(p => {
+            const qty = DB.getStock(p.sku) || 0;
+            const pct = Math.round((qty / maxQty) * 100);
+            const color = catColors[p.category] || '#8b5cf6';
+            return `<div class="stock-level-item">
+              <div class="slevel-name" title="${p.name}">${p.name}</div>
+              <div class="slevel-bar-wrap"><div class="slevel-bar" style="width:${pct}%;background:${color}"></div></div>
+              <div class="slevel-qty">${qty.toLocaleString()}</div>
+            </div>`;
+        }).join('');
+    }
+
     function init() {
         populateSKUDropdown();
         const firstSKU = document.getElementById('analyzer-sku').value;
         if (firstSKU) runAnalysis(firstSKU);
+        renderAnalyzerStockLevels();
     }
 
     function getAnomalyCount() {

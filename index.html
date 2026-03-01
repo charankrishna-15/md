@@ -411,65 +411,65 @@
         <h1>EOQ Optimization Module</h1>
         <p>Economic Order Quantity computation, reorder points, and demand forecasting</p>
       </div>
-      <div class="opt-layout">
-        <div class="opt-left">
-          <div class="card">
-            <div class="card-title">EOQ Calculator</div>
-            <div class="form-group">
-              <label>Select Product</label>
-              <select id="eoq-sku" onchange="loadEOQData(this.value)"></select>
-            </div>
-            <div class="eoq-params" id="eoq-params">
-              <div class="param-row">
-                <span>Annual Demand (D)</span>
-                <div class="param-input"><input type="number" id="eoq-demand" /><span>units/yr</span></div>
-              </div>
-              <div class="param-row">
-                <span>Ordering Cost (S)</span>
-                <div class="param-input"><input type="number" id="eoq-ordering" /><span>₹/order</span></div>
-              </div>
-              <div class="param-row">
-                <span>Unit Cost (C)</span>
-                <div class="param-input"><input type="number" id="eoq-cost" /><span>₹/unit</span></div>
-              </div>
-              <div class="param-row">
-                <span>Holding Rate (H%)</span>
-                <div class="param-input"><input type="number" id="eoq-holding" step="0.1" /><span>%/yr</span></div>
-              </div>
-              <div class="param-row">
-                <span>Lead Time (L)</span>
-                <div class="param-input"><input type="number" id="eoq-lead" /><span>days</span></div>
-              </div>
-              <div class="param-row">
-                <span>Safety Stock (SS)</span>
-                <div class="param-input"><input type="number" id="eoq-safety" /><span>units</span></div>
-              </div>
-            </div>
-            <button class="btn-primary full-width" onclick="computeEOQ()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10" />
-                <polyline points="12 6 12 12 16 14" />
-              </svg>
-              Compute EOQ & Reorder Point
-            </button>
-          </div>
-          <div class="card" style="margin-top:1rem" id="eoq-results-card">
-            <div class="card-title">EOQ Results</div>
-            <div id="eoq-results"></div>
-          </div>
+      <div class="module-grid-2x2">
+        <!-- Cell 1: Demand Forecast Chart -->
+        <div class="chart-card chart-accent-indigo">
+          <div class="chart-header"><span class="chart-title">Demand Forecast (Next 12 Months)</span></div>
+          <canvas id="forecast-chart"></canvas>
         </div>
-        <div class="opt-right">
-          <div class="card chart-accent-indigo">
-            <div class="card-title">Demand Forecast (Next 12 Months)</div>
-            <canvas id="forecast-chart" height="110"></canvas>
+        <!-- Cell 2: Total Cost Analysis Chart -->
+        <div class="chart-card chart-accent-amber">
+          <div class="chart-header"><span class="chart-title">Total Cost Analysis</span></div>
+          <canvas id="cost-chart"></canvas>
+        </div>
+        <!-- Cell 3: EOQ Calculator -->
+        <div class="chart-card chart-accent-purple">
+          <div class="chart-header">
+            <span class="chart-title">EOQ Calculator</span>
+            <select id="eoq-sku" onchange="loadEOQData(this.value)" style="font-size:0.75rem;padding:3px 8px"></select>
           </div>
-          <div class="card chart-accent-amber" style="margin-top:0.75rem">
-            <div class="card-title">Total Cost Analysis</div>
-            <canvas id="cost-chart" height="100"></canvas>
+          <div class="eoq-params" id="eoq-params">
+            <div class="param-row">
+              <span>Annual Demand (D)</span>
+              <div class="param-input"><input type="number" id="eoq-demand" /><span>units/yr</span></div>
+            </div>
+            <div class="param-row">
+              <span>Ordering Cost (S)</span>
+              <div class="param-input"><input type="number" id="eoq-ordering" /><span>₹/order</span></div>
+            </div>
+            <div class="param-row">
+              <span>Unit Cost (C)</span>
+              <div class="param-input"><input type="number" id="eoq-cost" /><span>₹/unit</span></div>
+            </div>
+            <div class="param-row">
+              <span>Holding Rate (H%)</span>
+              <div class="param-input"><input type="number" id="eoq-holding" step="0.1" /><span>%/yr</span></div>
+            </div>
+            <div class="param-row">
+              <span>Lead Time (L)</span>
+              <div class="param-input"><input type="number" id="eoq-lead" /><span>days</span></div>
+            </div>
+            <div class="param-row">
+              <span>Safety Stock (SS)</span>
+              <div class="param-input"><input type="number" id="eoq-safety" /><span>units</span></div>
+            </div>
           </div>
+          <button class="btn-primary full-width" onclick="computeEOQ()" style="margin-top:auto">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+            Compute EOQ &amp; Reorder Point
+          </button>
+        </div>
+        <!-- Cell 4: EOQ Results -->
+        <div class="chart-card chart-accent-green" id="eoq-results-card">
+          <div class="chart-header"><span class="chart-title">EOQ Results</span></div>
+          <div id="eoq-results" style="overflow-y:auto;flex:1"></div>
         </div>
       </div>
     </section>
+
 
     <!-- Module: Statistical Analyzer -->
     <section class="module" id="module-analyzer">
@@ -477,14 +477,20 @@
         <h1>Statistical Analyzer</h1>
         <p>Outlier detection, moving averages, and consumption pattern analysis</p>
       </div>
-      <div class="analyzer-layout">
-        <div class="analyzer-controls card">
-          <div class="card-title">Analysis Configuration</div>
-          <div class="form-group">
+      <div class="module-grid-2x2">
+        <!-- Cell 1: Anomaly Chart -->
+        <div class="chart-card chart-accent-purple">
+          <div class="chart-header"><span class="chart-title">Consumption + Moving Avg + Anomaly Detection</span></div>
+          <canvas id="anomaly-chart"></canvas>
+        </div>
+        <!-- Cell 2: Analysis Config -->
+        <div class="chart-card chart-accent-indigo">
+          <div class="chart-header"><span class="chart-title">Analysis Configuration</span></div>
+          <div class="form-group" style="margin-bottom:10px">
             <label>Select Product</label>
             <select id="analyzer-sku" onchange="runAnalysis(this.value)"></select>
           </div>
-          <div class="form-group">
+          <div class="form-group" style="margin-bottom:10px">
             <label>Moving Average Window</label>
             <select id="ma-window" onchange="runAnalysis(document.getElementById('analyzer-sku').value)">
               <option value="3">3-Day MA</option>
@@ -498,68 +504,70 @@
               oninput="document.getElementById('z-val').textContent=this.value; runAnalysis(document.getElementById('analyzer-sku').value)" />
             <span id="z-val" style="color:#6366f1;font-weight:600">2.0</span>σ
           </div>
-          <div class="stat-summary" id="stat-summary"></div>
+          <div class="stat-summary" id="stat-summary" style="margin-top:10px;flex:1;overflow-y:auto"></div>
         </div>
-        <div class="analyzer-main">
-          <div class="card chart-accent-purple">
-            <div class="chart-header">
-              <span class="chart-title">Consumption + Moving Average + Anomaly Detection</span>
-            </div>
-            <canvas id="anomaly-chart" height="120"></canvas>
-          </div>
-          <div class="anomaly-table card" style="margin-top:1rem">
-            <div class="card-title">Detected Anomalies</div>
-            <div id="anomaly-list"></div>
-          </div>
+        <!-- Cell 3: Detected Anomalies -->
+        <div class="chart-card chart-accent-pink">
+          <div class="chart-header"><span class="chart-title">Detected Anomalies</span></div>
+          <div id="anomaly-list" style="overflow-y:auto;flex:1"></div>
+        </div>
+        <!-- Cell 4: Stock Levels Quick View -->
+        <div class="chart-card chart-accent-emerald">
+          <div class="chart-header"><span class="chart-title">Current Stock Levels</span></div>
+          <div id="analyzer-stock-levels" style="overflow-y:auto;flex:1"></div>
         </div>
       </div>
     </section>
 
+
     <!-- Module: Reporting -->
     <section class="module" id="module-reporting">
       <div class="module-header">
-        <h1>Reports & Reorder Alerts</h1>
+        <h1>Reports &amp; Reorder Alerts</h1>
         <p>Automated reorder threshold monitoring and intelligent alert management</p>
       </div>
-      <div class="alert-summary" id="alert-summary"></div>
-      <div class="reports-layout">
-        <div class="alerts-panel card">
-          <div class="card-title">🔔 Active Reorder Alerts</div>
-          <div id="reorder-alerts-list"></div>
+      <div id="alert-summary" class="alert-summary"></div>
+      <div class="module-grid-2x2">
+        <!-- Cell 1: Reorder Chart -->
+        <div class="chart-card chart-accent-blue">
+          <div class="chart-header"><span class="chart-title">Reorder Status by Product</span></div>
+          <canvas id="reorder-chart"></canvas>
         </div>
-        <div class="reports-panel">
-          <div class="card chart-accent-blue">
-            <div class="card-title">Reorder Status by Product</div>
-            <canvas id="reorder-chart" height="120"></canvas>
+        <!-- Cell 2: Active Reorder Alerts -->
+        <div class="chart-card chart-accent-amber">
+          <div class="chart-header"><span class="chart-title">🔔 Active Reorder Alerts</span></div>
+          <div id="reorder-alerts-list" style="overflow-y:auto;flex:1"></div>
+        </div>
+        <!-- Cell 3: Inventory Health -->
+        <div class="chart-card chart-accent-green">
+          <div class="chart-header"><span class="chart-title">Inventory Health Score</span></div>
+          <div id="health-scores" style="overflow-y:auto;flex:1"></div>
+        </div>
+        <!-- Cell 4: Report Actions -->
+        <div class="chart-card chart-accent-pink">
+          <div class="chart-header"><span class="chart-title">Full Inventory Report</span></div>
+          <div class="report-actions" style="margin-bottom:10px">
+            <button class="btn-primary" onclick="generateReport()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+              </svg>
+              Generate Report
+            </button>
+            <button class="btn-secondary" onclick="exportCSV()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Export CSV
+            </button>
           </div>
-          <div class="card" style="margin-top:1rem">
-            <div class="card-title">Inventory Health Score</div>
-            <div id="health-scores"></div>
-          </div>
+          <div id="full-report-table" style="overflow-y:auto;flex:1"></div>
         </div>
-      </div>
-      <div class="card" style="margin-top:1.5rem">
-        <div class="card-title">Full Inventory Report</div>
-        <div class="report-actions">
-          <button class="btn-primary" onclick="generateReport()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-              <polyline points="14 2 14 8 20 8" />
-            </svg>
-            Generate Report
-          </button>
-          <button class="btn-secondary" onclick="exportCSV()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            Export CSV
-          </button>
-        </div>
-        <div id="full-report-table"></div>
       </div>
     </section>
+
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
