@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Advanced Inventory Management System with EOQ optimization, anomaly detection, and real-time stock tracking." />
+  <title>InvenIQ — Smart Inventory Management</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="bg-grid"></div>
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+          <line x1="12" y1="22.08" x2="12" y2="12"/>
+        </svg>
+      </div>
+      <span class="logo-text">InvenIQ</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="nav-item active" data-module="dashboard" id="nav-dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>Dashboard</span>
+      </a>
+      <a class="nav-item" data-module="product-db" id="nav-product-db">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        <span>Product DB</span>
+      </a>
+      <a class="nav-item" data-module="stock-tracker" id="nav-stock-tracker">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <span>Stock Tracker</span>
+      </a>
+      <a class="nav-item" data-module="optimization" id="nav-optimization">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+        <span>EOQ Optimizer</span>
+      </a>
+      <a class="nav-item" data-module="analyzer" id="nav-analyzer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        <span>Statistical Analyzer</span>
+      </a>
+      <a class="nav-item" data-module="reporting" id="nav-reporting">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <span>Reports & Alerts</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sys-status">
+        <span class="status-dot"></span>
+        <span>System Online</span>
+      </div>
+      <div class="sys-time" id="sys-time"></div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content" id="main-content">
+    <!-- Top Bar -->
+    <header class="topbar">
+      <button class="menu-toggle" id="menu-toggle" onclick="toggleSidebar()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="topbar-title" id="topbar-title">Dashboard</div>
+      <div class="topbar-actions">
+        <button class="btn-icon" title="Refresh data" onclick="initAllModules()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.05"/></svg>
+        </button>
+        <div class="topbar-badge" id="alert-badge" onclick="switchModule('reporting')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><bell/><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span id="alert-count">0</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Module: Dashboard -->
+    <section class="module active" id="module-dashboard">
+      <div class="module-header">
+        <h1>Inventory Dashboard</h1>
+        <p>Real-time overview of stock levels, movements, and alerts</p>
+      </div>
+      <div class="kpi-grid">
+        <div class="kpi-card" id="kpi-total-skus">
+          <div class="kpi-icon" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          </div>
+          <div class="kpi-info">
+            <div class="kpi-value" id="kpi-sku-count">0</div>
+            <div class="kpi-label">Total SKUs</div>
+          </div>
+          <div class="kpi-trend up">+2 this week</div>
+        </div>
+        <div class="kpi-card" id="kpi-low-stock">
+          <div class="kpi-icon" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div class="kpi-info">
+            <div class="kpi-value" id="kpi-low-count">0</div>
+            <div class="kpi-label">Low Stock Items</div>
+          </div>
+          <div class="kpi-trend down" id="kpi-low-trend">Critical</div>
+        </div>
+        <div class="kpi-card" id="kpi-total-value">
+          <div class="kpi-icon" style="background:linear-gradient(135deg,#10b981,#059669)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div class="kpi-info">
+            <div class="kpi-value" id="kpi-inv-value">₹0</div>
+            <div class="kpi-label">Inventory Value</div>
+          </div>
+          <div class="kpi-trend up">+8.2% vs last month</div>
+        </div>
+        <div class="kpi-card" id="kpi-anomalies">
+          <div class="kpi-icon" style="background:linear-gradient(135deg,#ec4899,#8b5cf6)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <div class="kpi-info">
+            <div class="kpi-value" id="kpi-anomaly-count">0</div>
+            <div class="kpi-label">Anomalies Detected</div>
+          </div>
+          <div class="kpi-trend down" id="kpi-anomaly-trend">Needs review</div>
+        </div>
+      </div>
+      <div class="charts-row">
+        <div class="chart-card wide">
+          <div class="chart-header">
+            <span class="chart-title">Stock Level Trends (7 Days)</span>
+            <div class="chart-legend">
+              <span class="leg-item"><span class="leg-dot" style="background:#6366f1"></span>Electronics</span>
+              <span class="leg-item"><span class="leg-dot" style="background:#10b981"></span>Pharma</span>
+              <span class="leg-item"><span class="leg-dot" style="background:#f59e0b"></span>FMCG</span>
+            </div>
+          </div>
+          <canvas id="dash-trend-chart" height="220"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header"><span class="chart-title">Stock by Category</span></div>
+          <canvas id="dash-pie-chart" height="220"></canvas>
+        </div>
+      </div>
+      <div class="activity-section">
+        <div class="section-title">Recent Stock Movements</div>
+        <div class="activity-list" id="activity-list"></div>
+      </div>
+    </section>
+
+    <!-- Module: Product DB -->
+    <section class="module" id="module-product-db">
+      <div class="module-header">
+        <h1>Product Database</h1>
+        <p>SKU management with full normalization and category mapping</p>
+      </div>
+      <div class="toolbar">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="product-search" placeholder="Search SKU, name, category..." oninput="filterProducts(this.value)" />
+        </div>
+        <div class="filter-group">
+          <select id="cat-filter" onchange="filterProducts(document.getElementById('product-search').value)">
+            <option value="">All Categories</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Pharma">Pharma</option>
+            <option value="FMCG">FMCG</option>
+            <option value="Industrial">Industrial</option>
+            <option value="Apparel">Apparel</option>
+          </select>
+        </div>
+        <button class="btn-primary" onclick="openAddProductModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Product
+        </button>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table" id="product-table">
+          <thead>
+            <tr>
+              <th>SKU</th>
+              <th>Product Name</th>
+              <th>Category</th>
+              <th>Unit</th>
+              <th>Unit Cost (₹)</th>
+              <th>Lead Time (days)</th>
+              <th>Supplier</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="product-tbody"></tbody>
+        </table>
+      </div>
+      <!-- Add Product Modal -->
+      <div class="modal-overlay" id="add-product-modal">
+        <div class="modal">
+          <div class="modal-header">
+            <h3>Add New Product</h3>
+            <button class="modal-close" onclick="closeModal('add-product-modal')">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>SKU Code</label>
+                <input type="text" id="p-sku" placeholder="e.g. ELEC-001" />
+              </div>
+              <div class="form-group">
+                <label>Product Name</label>
+                <input type="text" id="p-name" placeholder="Product name" />
+              </div>
+              <div class="form-group">
+                <label>Category</label>
+                <select id="p-category">
+                  <option>Electronics</option>
+                  <option>Pharma</option>
+                  <option>FMCG</option>
+                  <option>Industrial</option>
+                  <option>Apparel</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Unit of Measure</label>
+                <input type="text" id="p-unit" placeholder="pcs / kg / litre" />
+              </div>
+              <div class="form-group">
+                <label>Unit Cost (₹)</label>
+                <input type="number" id="p-cost" placeholder="0" />
+              </div>
+              <div class="form-group">
+                <label>Lead Time (days)</label>
+                <input type="number" id="p-lead" placeholder="7" />
+              </div>
+              <div class="form-group">
+                <label>Supplier Name</label>
+                <input type="text" id="p-supplier" placeholder="Supplier" />
+              </div>
+              <div class="form-group">
+                <label>Ordering Cost (₹)</label>
+                <input type="number" id="p-ordering-cost" placeholder="500" />
+              </div>
+              <div class="form-group">
+                <label>Holding Cost % (annual)</label>
+                <input type="number" id="p-holding" placeholder="25" step="0.1" />
+              </div>
+              <div class="form-group">
+                <label>Annual Demand (units)</label>
+                <input type="number" id="p-demand" placeholder="1000" />
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeModal('add-product-modal')">Cancel</button>
+            <button class="btn-primary" onclick="addProduct()">Save Product</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Module: Stock Tracker -->
+    <section class="module" id="module-stock-tracker">
+      <div class="module-header">
+        <h1>Stock Tracker</h1>
+        <p>Atomic updates with ACID-compliant transaction logging</p>
+      </div>
+      <div class="stock-layout">
+        <div class="stock-left">
+          <div class="card">
+            <div class="card-title">Record Stock Movement</div>
+            <div class="form-group">
+              <label>Select Product (SKU)</label>
+              <select id="txn-sku"></select>
+            </div>
+            <div class="form-group">
+              <label>Transaction Type</label>
+              <div class="radio-group">
+                <label class="radio-label"><input type="radio" name="txn-type" value="IN" checked> Inbound (Receive)</label>
+                <label class="radio-label"><input type="radio" name="txn-type" value="OUT"> Outbound (Issue)</label>
+                <label class="radio-label"><input type="radio" name="txn-type" value="ADJ"> Adjustment</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Quantity</label>
+              <input type="number" id="txn-qty" placeholder="Enter quantity" min="1" />
+            </div>
+            <div class="form-group">
+              <label>Reference / Reason</label>
+              <input type="text" id="txn-ref" placeholder="PO#, WO# or reason..." />
+            </div>
+            <div class="form-group">
+              <label>Batch / Lot Number</label>
+              <input type="text" id="txn-batch" placeholder="Optional batch number" />
+            </div>
+            <button class="btn-primary full-width" onclick="recordTransaction()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              Commit Transaction (ACID)
+            </button>
+            <div id="txn-result" class="txn-result hidden"></div>
+          </div>
+          <div class="card" style="margin-top:1rem">
+            <div class="card-title">Current Stock Levels</div>
+            <div id="stock-levels-list"></div>
+          </div>
+        </div>
+        <div class="stock-right">
+          <div class="card full-height">
+            <div class="card-title">Transaction Ledger</div>
+            <div class="table-wrap" style="max-height:600px;overflow-y:auto">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>TxID</th>
+                    <th>Timestamp</th>
+                    <th>SKU</th>
+                    <th>Type</th>
+                    <th>Qty</th>
+                    <th>Balance</th>
+                    <th>Reference</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="txn-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Module: EOQ Optimization -->
+    <section class="module" id="module-optimization">
+      <div class="module-header">
+        <h1>EOQ Optimization Module</h1>
+        <p>Economic Order Quantity computation, reorder points, and demand forecasting</p>
+      </div>
+      <div class="opt-layout">
+        <div class="opt-left">
+          <div class="card">
+            <div class="card-title">EOQ Calculator</div>
+            <div class="form-group">
+              <label>Select Product</label>
+              <select id="eoq-sku" onchange="loadEOQData(this.value)"></select>
+            </div>
+            <div class="eoq-params" id="eoq-params">
+              <div class="param-row">
+                <span>Annual Demand (D)</span>
+                <div class="param-input"><input type="number" id="eoq-demand" /><span>units/yr</span></div>
+              </div>
+              <div class="param-row">
+                <span>Ordering Cost (S)</span>
+                <div class="param-input"><input type="number" id="eoq-ordering" /><span>₹/order</span></div>
+              </div>
+              <div class="param-row">
+                <span>Unit Cost (C)</span>
+                <div class="param-input"><input type="number" id="eoq-cost" /><span>₹/unit</span></div>
+              </div>
+              <div class="param-row">
+                <span>Holding Rate (H%)</span>
+                <div class="param-input"><input type="number" id="eoq-holding" step="0.1" /><span>%/yr</span></div>
+              </div>
+              <div class="param-row">
+                <span>Lead Time (L)</span>
+                <div class="param-input"><input type="number" id="eoq-lead" /><span>days</span></div>
+              </div>
+              <div class="param-row">
+                <span>Safety Stock (SS)</span>
+                <div class="param-input"><input type="number" id="eoq-safety" /><span>units</span></div>
+              </div>
+            </div>
+            <button class="btn-primary full-width" onclick="computeEOQ()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Compute EOQ & Reorder Point
+            </button>
+          </div>
+          <div class="card" style="margin-top:1rem" id="eoq-results-card">
+            <div class="card-title">EOQ Results</div>
+            <div id="eoq-results"></div>
+          </div>
+        </div>
+        <div class="opt-right">
+          <div class="card">
+            <div class="card-title">Demand Forecast (Next 12 Months)</div>
+            <canvas id="forecast-chart" height="260"></canvas>
+          </div>
+          <div class="card" style="margin-top:1rem">
+            <div class="card-title">Total Cost Analysis</div>
+            <canvas id="cost-chart" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Module: Statistical Analyzer -->
+    <section class="module" id="module-analyzer">
+      <div class="module-header">
+        <h1>Statistical Analyzer</h1>
+        <p>Outlier detection, moving averages, and consumption pattern analysis</p>
+      </div>
+      <div class="analyzer-layout">
+        <div class="analyzer-controls card">
+          <div class="card-title">Analysis Configuration</div>
+          <div class="form-group">
+            <label>Select Product</label>
+            <select id="analyzer-sku" onchange="runAnalysis(this.value)"></select>
+          </div>
+          <div class="form-group">
+            <label>Moving Average Window</label>
+            <select id="ma-window" onchange="runAnalysis(document.getElementById('analyzer-sku').value)">
+              <option value="3">3-Day MA</option>
+              <option value="5" selected>5-Day MA</option>
+              <option value="7">7-Day MA</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Z-Score Threshold</label>
+            <input type="range" id="z-threshold" min="1.5" max="3.5" step="0.1" value="2.0"
+              oninput="document.getElementById('z-val').textContent=this.value; runAnalysis(document.getElementById('analyzer-sku').value)" />
+            <span id="z-val" style="color:#6366f1;font-weight:600">2.0</span>σ
+          </div>
+          <div class="stat-summary" id="stat-summary"></div>
+        </div>
+        <div class="analyzer-main">
+          <div class="card">
+            <div class="chart-header">
+              <span class="chart-title">Consumption + Moving Average + Anomaly Detection</span>
+            </div>
+            <canvas id="anomaly-chart" height="260"></canvas>
+          </div>
+          <div class="anomaly-table card" style="margin-top:1rem">
+            <div class="card-title">Detected Anomalies</div>
+            <div id="anomaly-list"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Module: Reporting -->
+    <section class="module" id="module-reporting">
+      <div class="module-header">
+        <h1>Reports & Reorder Alerts</h1>
+        <p>Automated reorder threshold monitoring and intelligent alert management</p>
+      </div>
+      <div class="alert-summary" id="alert-summary"></div>
+      <div class="reports-layout">
+        <div class="alerts-panel card">
+          <div class="card-title">🔔 Active Reorder Alerts</div>
+          <div id="reorder-alerts-list"></div>
+        </div>
+        <div class="reports-panel">
+          <div class="card">
+            <div class="card-title">Reorder Status by Product</div>
+            <canvas id="reorder-chart" height="260"></canvas>
+          </div>
+          <div class="card" style="margin-top:1rem">
+            <div class="card-title">Inventory Health Score</div>
+            <div id="health-scores"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:1.5rem">
+        <div class="card-title">Full Inventory Report</div>
+        <div class="report-actions">
+          <button class="btn-primary" onclick="generateReport()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Generate Report
+          </button>
+          <button class="btn-secondary" onclick="exportCSV()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export CSV
+          </button>
+        </div>
+        <div id="full-report-table"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="db.js"></script>
+  <script src="tracker.js"></script>
+  <script src="optimizer.js"></script>
+  <script src="analyzer.js"></script>
+  <script src="reporting.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
