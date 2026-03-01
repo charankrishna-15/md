@@ -498,16 +498,16 @@ body {
   backdrop-filter: blur(12px);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 20px;
+  padding: 10px;
 }
 
 .chart-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 6px;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 4px;
 }
 
 .chart-title {
